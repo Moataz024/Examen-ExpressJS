@@ -1,0 +1,54 @@
+<html lang="en">
+<head>
+    <script src="/socket.io/socket.io.js"></script>
+    <title>
+        Express Project
+    </title>
+
+</head>
+<body>
+
+<label for="hotel">ID Hotel:</label>
+<input type="text" id="hotel" />
+<label for="chambre">ID Chambre:</label>
+<input type="text" id="chambre" />
+<br/>
+<button onclick="reserver()">Réserver</button>
+<button onclick="afficher()">Afficher Chambres</button>
+<br/>
+
+
+<script>
+    user = prompt("Veuillez saisir votre nom")
+    const socket= io.connect()
+    socket.on("reserver",(data)=>{
+        let p=document.createElement("p")
+        p.innerText=("Informations sur la chambre réservé : "+data)
+        document.body.append(p)
+    })
+    socket.on("afficher",(data)=>{
+        let id = document.getElementById("hotel")
+        let p = document.createElement("p").innerText = (data)
+        document.body.append("Chambre non reservées de l'hotel ID : "+id.value+ " :")
+        document.body.append(p);
+    })
+
+
+    function reserver(){
+        let id = document.getElementById("chambre")
+        const data = {
+            id:id.value,
+            nom:user
+        }
+        socket.emit("reserver",data)
+    }
+    function afficher(){
+        let id = document.getElementById("hotel")
+        socket.emit("afficher",id.value);
+    }
+
+
+
+</script>
+</body>
+</html>
